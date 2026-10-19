@@ -1,0 +1,669 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> JILL'S PUBLIC LIBRARY - Digital Catalog</title>
+    <style>
+        /* Define the image's color scheme variables */
+        :root {
+            --color-bg-primary: #412653;     /* Deep Dark Purple background */
+            --color-bg-secondary: #3F567F;   /* Slate Blue for cards/sections */
+            --color-accent-vibrant: #E0563F; /* Coral Orange for main CTA/links */
+            --color-accent-soft: #D174D2;    /* Orchid Pink for subtle headers/highlights */
+            --color-text-main: #FFFFFF;      /* Pure White text */
+            --color-text-muted: rgba(255, 255, 255, 0.7); /* Translucent text for description */
+        }
+
+        /* General Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            scroll-behavior: smooth; /* Smooth scrolling animation */
+        }
+
+        body {
+            background-color: var(--color-bg-primary); 
+            color: var(--color-text-main); 
+            line-height: 1.6;
+            padding-top: 75px; /* Fixed spacing that perfectly clears the single-line navbar */
+        }
+
+        /* 📌 Ultra-Slim Fixed Single-Line Navigation Bar */
+        header {
+            background-color: rgba(65, 38, 83, 0.96); 
+            color: var(--color-text-main); 
+            padding: 0 1rem;
+            height: 60px; /* Slim height to avoid eating your screen real estate */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border-bottom: 1px solid rgba(209, 116, 210, 0.2); 
+            
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000; 
+        }
+
+        header h1 {
+            font-size: 1.1rem; /* Compact title size to make space for links */
+            font-weight: 700;
+            white-space: nowrap;
+            color: var(--color-text-main);
+        }
+
+        nav {
+            display: flex;
+            gap: 0.35rem; /* Tight spacing keeps it on one row */
+        }
+
+        nav a {
+            color: var(--color-text-main);
+            background-color: rgba(255, 255, 255, 0.06); 
+            text-decoration: none;
+            padding: 0.4rem 0.5rem;
+            font-weight: 600;
+            font-size: 0.75rem; /* Small font size prevents line-breaking text wraps */
+            border-radius: 4px;
+            border: 1px solid rgba(209, 116, 210, 0.2); 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            white-space: nowrap;
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Desktop & Tablet Expansion */
+        @media (min-width: 769px) {
+            header {
+                height: 70px;
+                padding: 0 2rem;
+            }
+            header h1 {
+                font-size: 1.4rem;
+            }
+            nav {
+                gap: 0.75rem;
+            }
+            nav a {
+                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+                flex-direction: row; /* Turns icons back to side-by-side on desktop */
+                gap: 0.25rem;
+            }
+            nav a span {
+                display: inline !important; /* Forces layout text back visible on larger desktop rigs */
+            }
+        }
+
+        /* 📱 Mobile Specific Adjustments for Clean Fit */
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1rem; /* Extremely small layout fit */
+            }
+            nav a {
+                padding: 0.35rem 0.4rem;
+                font-size: 0.65rem; /* Tiny text so everything drops perfectly on one line */
+            }
+        }
+
+        /* Target Section Layouts */
+        section {
+            scroll-margin-top: 80px; /* Offset adjustment so titles load below the fixed navbar */
+        }
+
+        /* Hero Banner (Homepage) */
+        .hero {
+            background: linear-gradient(rgba(65, 38, 83, 0.85), rgba(63, 86, 127, 0.9)), 
+                        url('https://unsplash.com') no-repeat center center/cover;
+            color: var(--color-text-main);
+            text-align: center;
+            padding: 3rem 1.25rem;
+            border-bottom: 1px solid rgba(209, 116, 210, 0.1);
+        }
+
+        .hero h2 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .hero h3 {
+            color: var(--color-accent-soft); 
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 0.85rem;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            font-size: 1.6rem;
+            color: var(--color-accent-soft); 
+            border-bottom: 2px solid rgba(209, 116, 210, 0.3);
+            padding-bottom: 0.5rem;
+        }
+
+        /* Grid Framework */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Feature & Book Cards */
+        .card {
+            background: var(--color-bg-secondary); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-info {
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--color-text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .card-description {
+            font-size: 0.9rem;
+            color: var(--color-text-muted); 
+            margin-bottom: 1.25rem;
+            flex-grow: 1;
+        }
+
+        /* Action Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--color-accent-vibrant); 
+            color: var(--color-text-main);
+        }
+
+/* Contact Section & Map Styling */
+.contact-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    background: var(--color-bg-secondary);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (min-width: 769px) {
+    .contact-container {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.contact-details p {
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.contact-details strong {
+    color: var(--color-accent-soft);
+}
+
+.map-wrapper {
+    width: 100%;
+    height: 350px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(209, 116, 210, 0.3);
+}
+
+.map-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    
+}
+
+/* Rating & Feedback Section Styling */
+.feedback-card {
+    background: var(--color-bg-secondary);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-top: 2rem;
+}
+
+.feedback-card p {
+    color: var(--color-text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 1.25rem;
+}
+
+/* Pure CSS Star Rating System */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.3rem;
+    margin-bottom: 1rem;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 2rem;
+    color: rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+/* Hover & Selected Star Highlights */
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+    color: #FFD700; /* Gold Star Color */
+}
+
+/* Feedback Inputs */
+.feedback-group {
+    margin-bottom: 1rem;
+}
+
+.feedback-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    color: var(--color-text-main);
+}
+
+.feedback-group input[type="text"],
+.feedback-group textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(209, 116, 210, 0.3);
+    border-radius: 6px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.feedback-group input[type="text"]:focus,
+.feedback-group textarea:focus {
+    border-color: var(--color-accent-soft);
+}
+
+.feedback-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Pure CSS Success Message Triggered on Form Submit */
+.feedback-success-msg {
+    display: none;
+}
+
+#feedbackForm:valid ~ .feedback-success-msg {
+    /* Optional styling or can be handled natively by page reload/action */
+}
+
+        /* Footer */
+        footer {
+            background-color: #271{435; 
+            color: var(--color-accent-soft);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(209, 116, 210, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fixed Header: Stays locked completely in one ultra-slim line without dynamic breaking -->
+    <header>
+        <h1>📚 JILL's Lib</h1>
+        <nav>
+            <a href="#homepage">🏠<span> Home</span></a>
+            <a href="#services">🛠️<span> Services</span></a>
+            <a href="#books">📖<span> Books</span></a>
+            <a href="#schedule">📅<span> Schedule</span></a>
+            <a href="#contact">✉️<span> Contact</span></a>
+        </nav>
+    </header>
+
+    <!-- 1. Homepage Section -->
+    <section id="homepage" class="hero">
+        <h1>Welcome to JILL'S PUBLIC LIBRARY</h1>
+        <h3>Your gateway to academic research, curated resources, and digital archives.</h3>
+        <p><b>Fully verified, inclusive community library dedicated to serving people of all ages and abilities. We provide unbiased resources across diverse subjects, ensuring equal access for students, teachers, workers, researchers, and persons with disabilities.</b></p>
+    </section>
+
+    <!-- Content Framework Wrapper -->
+    <main class="container">
+        
+        <!-- 2. Library Services Section -->
+        <section id="services">
+            <h3 class="section-title">Library Services</h3>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-info">
+                        <h4 class="card-title">Research Assistance</h4>
+                        <p class="card-description">Get one-on-one help from professional librarians to source materials for your research papers, theses, and capstone projects.</p>
+                        <button class="btn btn-primary" onclick="alert('Booking consultation form...')">Book Consultation</button>
+                    </div>
+                </div>
+            <div class="card">
+                    <div class="card-info">
+                        <h4 class="card-title">Study Room Reservations</h4>
+                        <p class="card-description">Reserve private group discussion blocks equipped with smartboards, power hubs, and reliable wireless connectivity.</p>
+                        <button class="btn btn-primary" onclick="alert('Opening room booking calendar...')">Reserve Room</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-info">
+                        <h4 class="card-title">Document Delivery</h4>
+                        <p class="card-description">Request digital scans of journal articles or book chapters within institutional fair-use limits delivered directly to your profile.</p>
+                        <button class="btn btn-primary" onclick="alert('Opening digital request form...')">Request Scan</button>
+                    </div>
+                </div>
+            
+<div class="search-container" style="margin-bottom: 2rem; width: 100%;">
+    <input type="text" id="serviceSearch" onkeyup="filterServices()" placeholder="Search for library services (e.g., Research, WiFi)..." 
+        style="width: 100%; padding: 0.8rem 1rem; font-size: 1rem; color: #FFFFFF; background-color: rgba(255, 255, 255, 0.07); border: 2px solid rgba(209, 116, 210, 0.3); border-radius: 8px; outline: none; transition: all 0.3s ease;">
+</div>
+</div>
+</div>
+            
+        </section>
+
+        <!-- 3. Available Books placeholder -->
+        
+        <section id="books">
+            <h3 class="section-title">Available Books</h3>
+            <div class="grid-3">
+                <!-- Book content rows can safely go here later -->
+<div class="search-container" style="margin-bottom: 2rem; width: 100%;">
+    <input type="text" id="bookSearch" onkeyup="filterBooks()" placeholder="Search books by title, author, or genre..." 
+        style="width: 100%; padding: 0.8rem 1rem; font-size: 1rem; color: #FFFFFF; background-color: rgba(255, 255, 255, 0.07); border: 2px solid rgba(209, 116, 210, 0.3); border-radius: 8px; outline: none; transition: all 0.3s ease;">
+</div>
+<h3> Featured books: </h3>
+                <div class="card">
+                    <div class="card-info">
+                        <h4 class="card-title">The Midnight Library: Echoes</h4>
+                        <p class="card-subtitle">by Matt Haig</p>
+                        <p class="card-description">A continuation of the beloved Midnight Library universe, this book explores new parallel lives and deeper questions about regret, choice, and meaning.  </p>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="alert('Borrowing The Great Gatsby!')">Borrow</button>
+                            <button class="btn btn-secondary" onclick="alert('Added to wishlist!')">Wishlist</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-info">
+                                        <h4 class="card-title">The Glass Horizon</h4>
+                        <p class="card-subtitle">by Emily St. John Mandel</p>
+                        <p class="card-description"> A speculative novel blending dystopia and hope, set in a fractured future where memory and identity are traded like currency.  </p>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="alert('Borrowing The Great Gatsby!')">Borrow</button>
+                            <button class="btn btn-secondary" onclick="alert('Added to wishlist!')">Wishlist</button>
+                        </div>
+                    </div>
+                </div>
+                    <div class="card">
+                    <div class="card-info">
+                                        <h4 class="card-title">Blood of the Phoenix</h4>
+                        <p class="card-subtitle">by R.F. Kuang</p>
+                        <p class="card-description">A gripping fantasy epic filled with political intrigue, magic, and rebellion, following a heroine caught between destiny and destruction.  </p>
+                        <div class="card-actions">
+                            <button class="btn btn-primary" onclick="alert('Borrowing The Great Gatsby!')">Borrow</button>
+                            <button class="btn btn-secondary" onclick="alert('Added to wishlist!')">Wishlist</button>
+                        </div>
+                    </div>
+                </div>
+                      
+            </div>
+        </section>
+
+        <!-- 4. Library Schedule placeholder -->
+        <section id="schedule">
+            <h3 class="section-title">Library Schedule</h3>
+            <div class="grid-3">
+                <!-- Schedule card rows can safely go here later -->
+                <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">Check our operating hours and plan your visit to Jill's Public Library.</p>
+
+<!-- Live Glowing Status Widget Context Component -->
+<div id="library-status-banner" style="display: inline-flex; align-items: center; gap: 0.5rem; background-color: rgba(255, 255, 255, 0.05); padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; border: 1px solid rgba(209, 116, 210, 0.2); margin-bottom: 1.5rem;">
+    <span id="status-dot" style="width: 8px; height: 8px; background-color: #4caf50; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #4caf50;"></span>
+    <span id="status-text" style="color: var(--color-text-main);">Checking Library Status...</span>
+</div>
+
+<!-- Phone-Optimized Schedule Component Layout -->
+<div class="schedule-container" style="display: flex; flex-direction: column; gap: 0.75rem; width: 100%;">
+    
+    <!-- Mon -->
+    <div class="schedule-row" data-day="1" data-open="8" data-close="18" style="display: flex; justify-content: space-between; align-items: center; background: var(--color-bg-secondary); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: border-color 0.3s ease;">
+        <div>
+            <strong style="display: block; font-size: 1.05rem; color: var(--color-text-main);">Monday</strong>
+            <span style="font-size: 0.85rem; color: var(--color-accent-soft); font-style: italic;">✨ Regular Services</span>
+        </div>
+        <div style="font-weight: 700; color: #FFFFFF; background-color: rgba(255,255,255,0.08); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem;">8:00 AM – 6:00 PM</div>
+    </div>
+
+    <!-- Tue -->
+    <div class="schedule-row" data-day="2" data-open="8" data-close="18" style="display: flex; justify-content: space-between; align-items: center; background: var(--color-bg-secondary); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: border-color 0.3s ease;">
+        <div>
+            <strong style="display: block; font-size: 1.05rem; color: var(--color-text-main);">Tuesday</strong>
+            <span style="font-size: 0.85rem; color: var(--color-accent-soft); font-style: italic;">✨ Regular Services</span>
+        </div>
+        <div style="font-weight: 700; color: #FFFFFF; background-color: rgba(255,255,255,0.08); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem;">8:00 AM – 6:00 PM</div>
+    </div>
+
+    <!-- Wed -->
+    <div class="schedule-row" data-day="3" data-open="8" data-close="18" style="display: flex; justify-content: space-between; align-items: center; background: var(--color-bg-secondary); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: border-color 0.3s ease;">
+        <div>
+            <strong style="display: block; font-size: 1.05rem; color: var(--color-text-main);">Wednesday</strong>
+            <span style="font-size: 0.85rem; color: var(--color-accent-soft); font-style: italic;">🤝 Community Programs</span>
+        </div>
+        <div style="font-weight: 700; color: #FFFFFF; background-color: rgba(255,255,255,0.08); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem;">8:00 AM – 6:00 PM</div>
+    </div>
+
+    <!-- Thu -->
+    <div class="schedule-row" data-day="4" data-open="8" data-close="18" style="display: flex; justify-content: space-between; align-items: center; background: var(--color-bg-secondary); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: border-color 0.3s ease;">
+        <div>
+            <strong style="display: block; font-size: 1.05rem; color: var(--color-text-main);">Thursday</strong>
+            <span style="font-size: 0.85rem; color: var(--color-accent-soft); font-style: italic;">🔬 Research Assistance</span>
+        </div>
+        <div style="font-weight: 700; color: #FFFFFF; background-color: rgba(255,255,255,0.08); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem;">8:00 AM – 6:00 PM</div>
+    </div>
+
+    <!-- Fri -->
+    <div class="schedule-row" data-day="5" data-open="8" data-close="18" style="display: flex; justify-content: space-between; align-items: center; background: var(--color-bg-secondary); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: border-color 0.3s ease;">
+        <div>
+            <strong style="display: block; font-size: 1.05rem; color: var(--color-text-main);">Friday</strong>
+            <span style="font-size: 0.85rem; color: var(--color-accent-soft); font-style: italic;">📚 Extended Study Hours</span>
+        </div>
+        <div style="font-weight: 700; color: #FFFFFF; background-color: rgba(255,255,255,0.08); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem;">8:00 AM – 6:00 PM</div>
+    </div>
+
+    <!-- Sat -->
+    <div class="schedule-row" data-day="6" data-open="9" data-close="16" style="display: flex; justify-content: space-between; align-items: center; background: var(--color-bg-secondary); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: border-color 0.3s ease;">
+        <div>
+            <strong style="display: block; font-size: 1.05rem; color: var(--color-text-main);">Saturday</strong>
+            <span style="font-size: 0.85rem; color: var(--color-accent-soft); font-style: italic;">🎨 Children's Activities</span>
+        </div>
+        <div style="font-weight: 700; color: #FFFFFF; background-color: rgba(255,255,255,0.08); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem;">9:00 AM – 4:00 PM</div>
+    </div>
+
+    <!-- Sun -->
+    <div class="schedule-row" data-day="0" data-open="13" data-close="19" style="display: flex; justify-content: space-between; align-items: center; background: var(--color-bg-secondary); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: border-color 0.3s ease;">
+        <div>
+            <strong style="display: block; font-size: 1.05rem; color: var(--color-text-main);">Sunday</strong>
+            <span style="font-size: 0.85rem; color: var(--color-accent-soft); font-style: italic;">🏛️ Guided Museum Visit</span>
+        </div>
+        <div style="font-weight: 700; color: #FFFFFF; background-color: rgba(255,255,255,0.08); padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.9rem;">1:00 PM – 7:00 PM</div>
+    </div>
+</div>
+
+                
+            </div>
+        </section>
+
+        <!-- 5. Contact Us placeholder -->
+        <section id="contact">
+            <h3 class="section-title">Contact Us</h3>
+            
+            <p style="color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 2rem;">We'd love to hear from you! Reach out for inquiries, services, or partnerships.</p>
+           
+    <div class="contact-container">
+        <!-- Details Column -->
+        <div class="contact-details">
+            <p><strong>📍 Address:</strong> KM5, La Trinidad, Benguet</p>
+            <p><strong>🏛️ Location Name:</strong>Jill's Public Library(La Trinidad Branch)</p>
+            <p><strong>📧 Email:</strong> jillspublicbrary@gmail.com</p>
+            <p><strong>📞 Phone:</strong> (+63) 969-157-7535</p>
+              </div>
+
+        <!-- Embedded Navigational Map Column -->
+        <div class="map-wrapper">
+            <iframe 
+                title="Jill's Public Library Map Location"
+                src="https://maps.google.com/maps?q=16.452667,120.589639+(Jill's+Public+Library)&t=&z=16&ie=UTF8&iwloc=B&output=embed" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+        </div>
+    </div>
+    </div>
+    <br>
+    </br>
+    <p> send us a direct message here! </p>
+<!-- 📱 Grid wrapper: Stacks vertically on phone screens, columns display side-by-side on desktop views -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 2rem; align-items: start; width: 100%;">
+    
+    <!-- ✉️ Left Column: Glass-Morphism Contact Form -->
+    <form class="contact-form" style="background: var(--color-bg-secondary); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); display: flex; flex-direction: column; gap: 1.25rem;">
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+            <label for="name" style="font-size: 0.85rem; font-weight: 600; color: var(--color-accent-soft);">Full Name:</label>
+            <input type="text" id="name" class="form-control" placeholder="Enter your name" required 
+                style="width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; color: #FFFFFF; background-color: rgba(255, 255, 255, 0.06); border: 1px solid rgba(209, 116, 210, 0.2); border-radius: 6px; outline: none; transition: border-color 0.2s ease;">
+        </div>
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+            <label for="email" style="font-size: 0.85rem; font-weight: 600; color: var(--color-accent-soft);">Email Address:</label>
+            <input type="email" id="email" class="form-control" placeholder="Enter your email" required 
+                style="width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; color: #FFFFFF; background-color: rgba(255, 255, 255, 0.06); border: 1px solid rgba(209, 116, 210, 0.2); border-radius: 6px; outline: none; transition: border-color 0.2s ease;">
+        </div>
+        
+        <div class="form-group" style="display: flex; flex-direction: column; gap: 0.4rem;">
+            <label for="message" style="font-size: 0.85rem; font-weight: 600; color: var(--color-accent-soft);">Message:</label>
+            <textarea id="message" class="form-control" rows="4" placeholder="Write your message here..." required 
+                style="width: 100%; padding: 0.75rem 1rem; font-size: 0.95rem; color: #FFFFFF; background-color: rgba(255, 255, 255, 0.06); border: 1px solid rgba(209, 116, 210, 0.2); border-radius: 6px; outline: none; resize: vertical; min-height: 100px; transition: border-color 0.2s ease;"></textarea>
+        </div>
+        
+        <button type="submit" class="btn btn-primary" style="display: inline-block; padding: 0.75rem 1rem; font-size: 0.95rem; font-weight: 600; text-align: center; text-decoration: none; border-radius: 6px; border: none; cursor: pointer; background-color: var(--color-accent-vibrant); color: #FFFFFF; transition: background-color 0.2s, box-shadow 0.2s;">Send Message</button>
+    </form>
+    
+    <!-- 📍 Right Column: Minimalist Quick Information Cards -->
+    <div class="contact-info" style="display: flex; flex-direction: column; gap: 1rem;">
+        
+   
+        <!-- Rating, Feedback & Suggestions Section (Pure HTML/CSS) -->
+<section id="rating-feedback" style="margin-top: 3rem;">
+    <h3 class="section-title">Ratings & Feedback</h3>
+    <div class="feedback-card">
+        <p>We value your experience at Jill's Public Library! Please rate our services and share your suggestions below.</p>
+        
+        <!-- Standard form submission method without JS -->
+        <form id="feedbackForm" action="#" method="POST">
+            <!-- 5-Star Rating -->
+            <div class="feedback-group">
+                <label>Your Rating:</label>
+                <div class="star-rating">
+                    <input type="radio" id="star5" name="rating" value="5" required>
+                    <label for="star5" title="5 stars">★</label>
+                    
+                    <input type="radio" id="star4" name="rating" value="4">
+                    <label for="star4" title="4 stars">★</label>
+                    
+                    <input type="radio" id="star3" name="rating" value="3">
+                    <label for="star3" title="3 stars">★</label>
+                    
+                    <input type="radio" id="star2" name="rating" value="2">
+                    <label for="star2" title="2 stars">★</label>
+                    
+                    <input type="radio" id="star1" name="rating" value="1">
+                    <label for="star1" title="1 star">★</label>
+                </div>
+            </div>
+
+            <!-- User Name (Optional) -->
+            <div class="feedback-group">
+                <label for="reviewerName">Name (Optional):</label>
+                <input type="text" id="reviewerName" placeholder="Enter your name or remain anonymous">
+            </div>
+
+            <!-- Feedback & Suggestions Field -->
+            <div class="feedback-group">
+                <label for="userFeedback">Feedback & Suggestions:</label>
+                <textarea id="userFeedback" placeholder="Tell us what you loved or what we can improve..." required></textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Submit Feedback</button>
+        </form>
+    </div>
+</section>
+
+    </div>
+</div>
+</section>
